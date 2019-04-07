@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Build Mobile Wallet</title>
+    <link rel="stylesheet" href="index.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <v-app>
+            <v-container>
+                <v-layout row wrap align-center>
+                    <v-flex class="text-xs-center" md-3>
+                        <img width="100px" height="100px"
+                            src="https://user-images.githubusercontent.com/37406965/51083189-d5dc3a80-173b-11e9-8ca0-28015e0893ac.png">
+
+                        <h2>Mobile Wallet </h2>
+
+                        <v-text-field v-model="branch" label="Branch"></v-text-field>
+
+                        <v-btn v-on:click="triggerBuild(TOKEN, MIFOS_ORGANIZATION_ID, MOBILE_WALLET_PROJECT_ID, branch)"
+                            color="info">
+                            Build APK</v-btn>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+
+        </v-app>
+
+
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                MIFOS_ORGANIZATION_ID: "d69028a0-34aa-0137-9e79-5efde2d3bfe8",
+                MOBILE_WALLET_PROJECT_ID: "dcdcf830-34aa-0137-9e79-5efde2d3bfe8",
+                TOKEN: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTQ2NTI0ODYsImlzcyI6Imh0dHBzOi8vYXBpLmNvZGVzaGlwLmNvbS92Mi8iLCJhdWQiOiJjbGllbnQiLCJpYXQiOjE1NTQ2NDg4ODYsImp0aSI6IjhjYWU2NjZiMmFlNDRlY2M0ZmJmMTVlOWU2YjIzNzdlIiwidXNlcl9pZCI6MjExNzg5LCJ0cmFja2luZ19jb25zZW50Ijp0cnVlLCJzY29wZXMiOnsiZDY5MDI4YTAtMzRhYS0wMTM3LTllNzktNWVmZGUyZDNiZmU4IjpbInByb2plY3QucmVhZCIsInByb2plY3Qud3JpdGUiLCJidWlsZC5yZWFkIiwiYnVpbGQud3JpdGUiXX0sImFkbWluIjpmYWxzZX0.p58TTHIg_0UyVgCvPkBwT4_tY16046rna8TpLYGvDrI",
+                branch: ''
+            },
+            methods: {
+                triggerBuild: function (token, orgId, projectId, branch) {
+                    console.log(orgId)
+                    const headers = {
+                        'Authorization': 'Bearer ' + token
+                    }
+                    var body = {
+                        ref: "heads/" + branch
+                    }
+                    console.log(headers)
+                    console.log(body)
+                    axios
+                        .post('https://api.codeship.com/v2/organizations/' + orgId + '/projects/' + projectId + '/builds',
+                            body, { headers: headers })
+                        .then(response => (this.info = response))
+                }
+
+            }
+        })
+    </script>
+</body>
+
+</html>
